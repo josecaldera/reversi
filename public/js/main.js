@@ -79,7 +79,7 @@ socket.on('join_room_response',function(payload){
 
     var buttonC = makeInviteButton();
     $('.socket_'+payload.socket_id+' button').replaceWith(buttonC);
-    dom_elements.slideDown(1000)
+    dom_elements.slideDown(1000);
 
   }
 
@@ -94,30 +94,37 @@ socket.on('join_room_response',function(payload){
 
 /* what to do when server says someone left */
 socket.on('player_disconnected',function(payload){
+  console.log('made it to checkpoint 0');
   /* If the payload fails, display an alert with the message. */
   if(payload.result == 'fail'){
     alert(payload.message);
     return;
   }
-
+  console.log('made it to checkpoint 1');
   /* If we are notified that we left a room then ignore it */
   if (payload.socket_id == socket.id){
     return;
   }
 
+  console.log('made it to checkpoint 2');
   /* If someone leaves animate out all their content*/
   var dom_elements = $('.socket_'+payload.socket_id);
+
+  console.log('made it to checkpoint 3');
   /* If something exists. */
   if(dom_elements.length != 0){
     dom_elements.slideUp(1000);
   }
 
+  console.log('made it to checkpoint 4');
   /* Manage the message that a player has left */
   var newHTML = '<p>'+payload.username+' has left the lobby</p>';
   var newNode = $(newHTML);
   newNode.hide();
   $('#messages').append(newNode);
   newNode.slideDown(1000);
+
+  console.log('made it to checkpoint 5');
 });
 
 socket.on('send_message_response',function(payload){
