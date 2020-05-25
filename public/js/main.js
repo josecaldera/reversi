@@ -49,13 +49,13 @@ socket.on('join_room_response',function(payload){
   /* If we already have an entry for this person */
   if(dom_elements.length == 0){
     var nodeA = $('<div></div>');
-    nodeA.addClass('socket'+payload.socket_id);
+    nodeA.addClass('socket_'+payload.socket_id);
 
     var nodeB = $('<div></div>');
-    nodeB.addClass('socket'+payload.socket_id);
+    nodeB.addClass('socket_'+payload.socket_id);
 
     var nodeC = $('<div></div>');
-    nodeC.addClass('socket'+payload.socket_id);
+    nodeC.addClass('socket_'+payload.socket_id);
 
     nodeA.addClass('w=100');
 
@@ -110,7 +110,7 @@ socket.on('player_disconnected',function(payload){
   /* If someone leaves animate out all their content*/
   var dom_elements = $('.socket_'+payload.socket_id);
 
-  console.log('made it to checkpoint 3');
+  console.log('made it to checkpoint 3', dom_elements);
   /* If something exists. */
   if(dom_elements.length != 0){
     dom_elements.slideUp(1000);
