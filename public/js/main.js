@@ -145,7 +145,7 @@ socket.on('invited',function(payload){
     alert(payload.message);
     return;
   }
-  var newNode = makePlayButton();
+  var newNode = makePlayButton(payload.socket_id);
   $('.socket_'+payload.socket_id+' button').replaceWith(newNode);
 });
 
@@ -173,6 +173,28 @@ socket.on('uninvited',function(payload){
   }
   var newNode = makeInviteButton(payload.socket_id);
   $('.socket_'+payload.socket_id+' button').replaceWith(newNode);
+});
+
+/* send an game_start message to the server*/
+function game_start(who){
+  var payload = {};
+  payload.requested_user = who;
+  console.log('*** Client Log Message: \'game_start\' payload: '+JSON.stringify(payload));
+  socket.emit('game_start',payload);
+}
+
+/* handle a notification that we have been engaged */
+socket.on('game_start_response',function(payload){
+  if(payload.result == 'fail'){
+    alert(payload.message);
+    return;
+  }
+
+  var newNode = makeEngagedButton(payload.socket_id);
+  $('.socket_'+payload.socket_id+' button').replaceWith(newNode);
+
+  /* jump to a new page */
+  window.location.href = 'game.html?username='+username+'&game_id='+payload.game_id;
 });
 
 /* something else */
@@ -217,13 +239,16 @@ socket.on('send_message_response',function(payload){
     return(newNode);
   }
 
-  function makePlayButton() {
+  function makePlayButton(socket_id) {
     var newHTML = '<button type=\'button\' class=\'btn btn-success\'>Play</button>';
     var newNode = $(newHTML);
+    newNode.click(function(){
+      game_start(socket_id);
+    });
     return(newNode);
   }
 
-  function makeEngageButton() {
+  function makeEngagedButton() {
     var newHTML = '<button type=\'button\' class=\'btn btn-danger\'>Engaged</button>';
     var newNode = $(newHTML);
     return(newNode);
